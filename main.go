@@ -27,7 +27,7 @@ type Participant struct {
 	SessionKey *big.Int
 }
 
-// Generates session key from another participant's public key and modulus p.
+// Generates session key from another participant's public key.
 func (par *Participant) GenerateSessionKey(publicKey *big.Int) {
 	sessionKey := new(big.Int)
 	sessionKey.Exp(publicKey, par.secretKey, par.p)
@@ -87,8 +87,10 @@ func main() {
 	parA := CreateParticipant(g, p)
 	parB := CreateParticipant(g, p)
 
-	fmt.Printf("Participant A:\n\tsk = 0x%x\n\tpk = 0x%x\n", parA.secretKey, parA.PublicKey)
-	fmt.Printf("Participant B:\n\tsk = 0x%x\n\tpk = 0x%x\n\n", parB.secretKey, parB.PublicKey)
+	fmt.Printf("Participant A:\n\tsk = 0x%x\n\tpk = 0x%x\n",
+		parA.secretKey, parA.PublicKey)
+	fmt.Printf("Participant B:\n\tsk = 0x%x\n\tpk = 0x%x\n\n",
+		parB.secretKey, parB.PublicKey)
 
 	// Generate session keys
 

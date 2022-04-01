@@ -61,7 +61,7 @@ func CreateParticipant(g, p *big.Int) *Participant {
 	return par
 }
 
-// Checks if err is nil and prints the message extiting the program if true.
+// Checks if err is nil and prints the message exiting the program if true.
 func checkErr(err error, message string) {
 	if err != nil {
 		log.Fatal(message)

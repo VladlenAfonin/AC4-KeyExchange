@@ -2,11 +2,11 @@ package mti
 
 import (
 	"crypto/rand"
-	"crypto/sha256"
 	"io"
 	"math/big"
 
 	"github.com/VladlenAfonin/AC4-KeyExchange/common"
+	"github.com/mikhirev/gostribog"
 	"golang.org/x/crypto/hkdf"
 )
 
@@ -30,7 +30,8 @@ func (par *Participant) GenerateSessionKey(publicKey, nonce *big.Int) {
 	sessionKey := new(big.Int).Mul(ptox, mtoa)
 	sessionKey.Mod(sessionKey, par.p)
 
-	hash := sha256.New
+	hash := gostribog.New256
+
 	hkdf := hkdf.New(hash, sessionKey.Bytes(), nil, nil)
 
 	par.SessionKey = new(big.Int)

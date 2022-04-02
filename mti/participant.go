@@ -1,4 +1,4 @@
-package diffie
+package mti
 
 import (
 	"crypto/rand"
@@ -15,15 +15,20 @@ type Participant struct {
 	g *big.Int
 	p *big.Int
 
+	x *big.Int
+
 	PublicKey  *big.Int
 	SecretKey  *big.Int
 	SessionKey *big.Int
 }
 
-// Generates session key from another participant's public key.
-func (par *Participant) GenerateSessionKey(publicKey *big.Int) {
-	sessionKey := new(big.Int)
-	sessionKey.Exp(publicKey, par.SecretKey, par.p)
+// Generates session key from another participant's public key and nonce.
+func (par *Participant) GenerateSessionKey(publicKey, nonce *big.Int) {
+	mtoa := new(big.Int).Exp(nonce, par.SecretKey, par.p)
+	ptox := new(big.Int).Exp(publicKey, par.x, par.p)
+
+	sessionKey := new(big.Int).Mul(ptox, mtoa)
+	sessionKey.Mod(sessionKey, par.p)
 
 	hash := sha256.New
 	hkdf := hkdf.New(hash, sessionKey.Bytes(), nil, nil)
@@ -37,6 +42,19 @@ func (par *Participant) GenerateSessionKey(publicKey *big.Int) {
 	par.SessionKey.SetBytes(buf)
 }
 
+// Generates private and public nonces. Returns public nonce.
+func (par *Participant) GenX() *big.Int {
+	var err error
+
+	tmp := new(big.Int).Sub(par.p, big.NewInt(1))
+	par.x, err = rand.Int(rand.Reader, tmp)
+	common.CheckErr(err, common.ErrorRandom)
+
+	m := new(big.Int).Exp(par.g, par.x, par.p)
+
+	return m
+}
+
 // Initializes a new Participant.
 func CreateParticipant(g, p *big.Int) *Participant {
 	par := new(Participant)
@@ -44,9 +62,7 @@ func CreateParticipant(g, p *big.Int) *Participant {
 	par.p = p
 	par.g = g
 
-	// I know it's horrible
-	tmp := big.NewInt(0).Sub(p, big.NewInt(1))
-
+	tmp := new(big.Int).Sub(p, big.NewInt(1))
 	sk, err := rand.Int(rand.Reader, tmp)
 	common.CheckErr(err, common.ErrorPrime)
 

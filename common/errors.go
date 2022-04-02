@@ -1,4 +1,4 @@
-package diffie
+package common
 
 import "log"
 
@@ -9,7 +9,7 @@ const (
 )
 
 // Checks if err is nil and prints the message exiting the program if true.
-func checkErr(err error, message string) {
+func CheckErr(err error, message string) {
 	if err != nil {
 		log.Fatal(message)
 	}

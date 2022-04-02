@@ -1,4 +1,4 @@
-package diffie
+package mti
 
 import (
 	"crypto/rand"
@@ -8,9 +8,7 @@ import (
 	"github.com/VladlenAfonin/AC4-KeyExchange/common"
 )
 
-// TODO: Add bool to ask for failing demo.
-
-// Diffie-Hellman algorithm demo.
+// MTI protocol demo.
 func Demo() {
 
 	// Parameter generation
@@ -36,10 +34,18 @@ func Demo() {
 	fmt.Printf("Participant A:\n\tsk = 0x%x\n\tpk = 0x%x\n", parA.SecretKey, parA.PublicKey)
 	fmt.Printf("Participant B:\n\tsk = 0x%x\n\tpk = 0x%x\n\n", parB.SecretKey, parB.PublicKey)
 
-	// Generate session keys
+	// Generate nonces
 
-	parA.GenerateSessionKey(parB.PublicKey)
-	parB.GenerateSessionKey(parA.PublicKey)
+	mab := parA.GenX()
+	mba := parB.GenX()
+
+	fmt.Printf("m_AB = 0x%x\n", mab)
+	fmt.Printf("m_BA = 0x%x\n\n", mba)
+
+	// Construct session keys
+
+	parA.GenerateSessionKey(parB.PublicKey, mba)
+	parB.GenerateSessionKey(parA.PublicKey, mab)
 
 	fmt.Printf("Participant A's session key: 0x%v\n", parA.SessionKey)
 	fmt.Printf("Participant B's session key: 0x%v\n", parB.SessionKey)

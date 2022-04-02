@@ -1,3 +1,5 @@
+github.com/mikhirev/gostribog v0.0.0-20140929084232-33bce6808ee9 h1:DEHqC9Y5cdugRfI/utoF1fvN8NtBHlvVTgxnys15TrA=
+github.com/mikhirev/gostribog v0.0.0-20140929084232-33bce6808ee9/go.mod h1:v6FLgUT08mme5YPzsf3JFow4Cy2DclDo6c5thVBBbno=
 golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 h1:tkVvjkPTB7pnW3jnid7kNyAMPVWllTNOf/qKDze4p9o=
 golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29/go.mod h1:IxCIyHEi3zRg3s0A5j5BB6A9Jmi73HwBIUl50j+osU4=
 golang.org/x/net v0.0.0-20211112202133-69e39bad7dc2/go.mod h1:9nx3DQGgdP8bBQD5qxJ1jj9UTztislL4KSBs9R2vV5Y=

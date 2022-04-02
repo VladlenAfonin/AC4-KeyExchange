@@ -2,15 +2,9 @@ package common
 
 import "log"
 
-const (
-	ErrorRandom  = "Unable to generate random number"
-	ErrorPrime   = "Unable to generate prime"
-	ErrorReading = "Unable to read from stream"
-)
-
 // Checks if err is nil and prints the message exiting the program if true.
-func CheckErr(err error, message string) {
+func CheckErr(err error) {
 	if err != nil {
-		log.Fatal(message)
+		log.Fatal(err)
 	}
 }

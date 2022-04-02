@@ -32,7 +32,7 @@ func (par *Participant) GenerateSessionKey(publicKey *big.Int) {
 	buf := make([]byte, 16) // take 128 bits (AES key, for example)
 
 	_, err := io.ReadFull(hkdf, buf)
-	common.CheckErr(err, common.ErrorReading)
+	common.CheckErr(err)
 
 	par.SessionKey.SetBytes(buf)
 }
@@ -48,7 +48,7 @@ func CreateParticipant(g, p *big.Int) *Participant {
 	tmp := big.NewInt(0).Sub(p, big.NewInt(1))
 
 	sk, err := rand.Int(rand.Reader, tmp)
-	common.CheckErr(err, common.ErrorPrime)
+	common.CheckErr(err)
 
 	par.SecretKey = sk
 	par.PublicKey = new(big.Int)

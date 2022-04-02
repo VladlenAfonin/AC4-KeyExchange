@@ -10,7 +10,7 @@ import (
 
 type KeyPair struct {
 	N *big.Int
-	E int
+	E *int
 }
 
 type Participant struct {
@@ -32,10 +32,10 @@ func CreateParticipant(g, p *big.Int) *Participant {
 	par.g = g
 
 	par.PrivateKey, err = rsa.GenerateKey(rand.Reader, 128)
-	common.CheckErr(err, common.ErrorRandom)
+	common.CheckErr(err)
 
 	par.SecretKey = par.PrivateKey.D
-	par.PublicKey = KeyPair{par.PrivateKey.N, par.PrivateKey.E}
+	par.PublicKey = KeyPair{par.PrivateKey.N, &par.PrivateKey.E}
 
 	return par
 }

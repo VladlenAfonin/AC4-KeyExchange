@@ -16,7 +16,7 @@ func Demo() {
 	// Parameter generation
 
 	p, err := rand.Prime(rand.Reader, 128)
-	common.CheckErr(err, common.ErrorPrime)
+	common.CheckErr(err)
 
 	fmt.Printf("p     = 0x%x\n", p)
 
@@ -24,7 +24,7 @@ func Demo() {
 	tmp := big.NewInt(0).Sub(p, big.NewInt(1))
 
 	g, err := rand.Int(rand.Reader, tmp)
-	common.CheckErr(err, common.ErrorRandom)
+	common.CheckErr(err)
 
 	fmt.Printf("alpha = 0x%x\n\n", g)
 

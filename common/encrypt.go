@@ -9,6 +9,7 @@ import (
 	pkcs7 "github.com/mergermarket/go-pkcs7"
 )
 
+// Encrypts pt with AES-CBC using key k. IV is the first block
 func Encrypt(pt, k []byte) ([]byte, error) {
 	pt, err := pkcs7.Pad(pt, aes.BlockSize)
 
@@ -30,6 +31,7 @@ func Encrypt(pt, k []byte) ([]byte, error) {
 	return ct, nil
 }
 
+// Decrypts AES-CBC with IV as first block.
 func Decrypt(ct, k []byte) ([]byte, error) {
 	block, err := aes.NewCipher(k)
 	if err != nil {

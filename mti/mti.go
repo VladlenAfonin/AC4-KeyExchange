@@ -9,8 +9,6 @@ import (
 	"github.com/VladlenAfonin/AC4-KeyExchange/common"
 )
 
-// TODO: Add bool to ask for failing demo.
-
 // MTI protocol demo.
 func Demo(fail bool) {
 

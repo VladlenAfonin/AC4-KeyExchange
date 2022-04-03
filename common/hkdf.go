@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/hkdf"
 )
 
+// Returns n bytes of HKDF processed message m.
 func Hkdf(m []byte, n int) ([]byte, error) {
 	hash := sha256.New
 	hkdf := hkdf.New(hash, m, nil, nil)

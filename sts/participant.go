@@ -24,6 +24,7 @@ type Participant struct {
 	SessionKey []byte
 }
 
+// Generates private/public nonce and stores them. Returns public nonce.
 func (par *Participant) GenX() *big.Int {
 	var err error
 
@@ -36,6 +37,8 @@ func (par *Participant) GenX() *big.Int {
 	return par.ax
 }
 
+// Generates session key and signature. Returns it's public nonce and signature
+// generated
 func (par *Participant) GenX2(ay *big.Int) (*big.Int, []byte) {
 	var err error
 
@@ -54,8 +57,6 @@ func (par *Participant) GenX2(ay *big.Int) (*big.Int, []byte) {
 		panic(err)
 	}
 
-	// fmt.Printf("SessionKey = %x\n", par.SessionKey)
-
 	// Create a signature
 	message := append(ax.Bytes(), ay.Bytes()...)
 
@@ -66,17 +67,15 @@ func (par *Participant) GenX2(ay *big.Int) (*big.Int, []byte) {
 	signature, err := rsa.SignPSS(rand.Reader, par.PrivateKey, crypto.SHA256, digest[:], nil)
 	common.CheckErr(err)
 
-	// fmt.Printf("Signature = %x\n", signature)
-
 	// Encrypt signature
 	ct, err := common.Encrypt(signature, par.SessionKey)
 	common.CheckErr(err)
 
-	// fmt.Printf("ct = %x\n", ct)
-
 	return ax, ct
 }
 
+// Checks signature and generates the session key. Returns it's signed message.
+// If verification fails, error is returned and session key is discarded.
 func (par *Participant) Check(ay *big.Int, ct []byte, pk *rsa.PublicKey) ([]byte, error) {
 	var err error
 
@@ -89,16 +88,11 @@ func (par *Participant) Check(ay *big.Int, ct []byte, pk *rsa.PublicKey) ([]byte
 		return nil, err
 	}
 
-	// fmt.Printf("SessionKey = %x\n", par.SessionKey)
-	// fmt.Printf("ct = %x\n", ct)
-
 	// Decrypt signature
 	signature, err := common.Decrypt(ct, par.SessionKey)
 	if err != nil {
 		return nil, err
 	}
-
-	// fmt.Printf("Signature = %x\n", signature)
 
 	message := append(ay.Bytes(), par.ax.Bytes()...)
 
@@ -131,6 +125,8 @@ func (par *Participant) Check(ay *big.Int, ct []byte, pk *rsa.PublicKey) ([]byte
 	return newCt, nil
 }
 
+// Performs final signature check. If verification fails, error is returned and
+// the session key is discarded.
 func (par *Participant) Check2(ay *big.Int, ct []byte, pk *rsa.PublicKey) error {
 	signature, err := common.Decrypt(ct, par.SessionKey)
 	if err != nil {

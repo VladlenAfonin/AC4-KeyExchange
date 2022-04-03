@@ -1,6 +1,9 @@
 package main
 
+import "github.com/VladlenAfonin/AC4-KeyExchange/diffie"
+
 func main() {
-	// diffie.Demo()
-	// mti.Demo()
+	diffie.Demo(false)
+	// mti.Demo(false)
+	// sts.Demo(false)
 }

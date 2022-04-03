@@ -3,42 +3,69 @@ package sts
 import (
 	"crypto/rand"
 	"crypto/rsa"
+	"fmt"
+	"log"
 	"math/big"
 
 	"github.com/VladlenAfonin/AC4-KeyExchange/common"
 )
 
-type KeyPair struct {
-	N *big.Int
-	E *int
-}
+func Demo(fail bool) {
 
-type Participant struct {
-	PrivateKey *rsa.PrivateKey
+	// Parameter generation
 
-	g *big.Int
-	p *big.Int
-
-	PublicKey  KeyPair
-	SecretKey  *big.Int
-	SessionKey *big.Int
-}
-
-func CreateParticipant(g, p *big.Int) *Participant {
-	par := new(Participant)
-	var err error
-
-	par.p = p
-	par.g = g
-
-	par.PrivateKey, err = rsa.GenerateKey(rand.Reader, 128)
+	p, err := rand.Prime(rand.Reader, 128)
 	common.CheckErr(err)
 
-	par.SecretKey = par.PrivateKey.D
-	par.PublicKey = KeyPair{par.PrivateKey.N, &par.PrivateKey.E}
+	fmt.Printf("p = 0x%x\n", p)
 
-	return par
-}
+	// Get p - 1
+	tmp := big.NewInt(0).Sub(p, big.NewInt(1))
 
-func Demo() {
+	g, err := rand.Int(rand.Reader, tmp)
+	common.CheckErr(err)
+
+	fmt.Printf("g = 0x%x\n\n", g)
+
+	// Create participants
+
+	parA := CreateParticipant(g, p)
+	parB := CreateParticipant(g, p)
+
+	fmt.Printf("Participant A:\n\tsk = 0x%x\n\tpk = %x\n", parA.PrivateKey.D, parA.PublicKey)
+	fmt.Printf("Participant B:\n\tsk = 0x%x\n\tpk = %x\n\n", parB.PrivateKey.D, parB.PublicKey)
+
+	// 1.
+
+	ax := parA.GenX()
+
+	// 2.
+
+	ay, signB := parB.GenX2(ax)
+
+	// 3.
+
+	signA, err := parA.Check(ay, signB, parB.PublicKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// 4.
+
+	// Fail condition
+	if fail {
+		tmp, err := rsa.GenerateKey(rand.Reader, 1024)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		parA.PublicKey = &tmp.PublicKey
+	}
+
+	if err = parB.Check2(ax, signA, parA.PublicKey); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Participant A's session key: 0x%x\n", parA.SessionKey)
+	fmt.Printf("Participant B's session key: 0x%x\n", parB.SessionKey)
 }

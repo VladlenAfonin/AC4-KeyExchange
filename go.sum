@@ -1,3 +1,5 @@
+github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9 h1:j6boLfPkcFlRVaKbc0hf5PVh3jJrdHv9n6SIPOdVKaU=
+github.com/mergermarket/go-pkcs7 v0.0.0-20170926155232-153b18ea13c9/go.mod h1:GH7jtq102ZiRB7LEKgqP54akN7GOVaNpCJrDWTeWSMY=
 github.com/mikhirev/gostribog v0.0.0-20140929084232-33bce6808ee9 h1:DEHqC9Y5cdugRfI/utoF1fvN8NtBHlvVTgxnys15TrA=
 github.com/mikhirev/gostribog v0.0.0-20140929084232-33bce6808ee9/go.mod h1:v6FLgUT08mme5YPzsf3JFow4Cy2DclDo6c5thVBBbno=
 golang.org/x/crypto v0.0.0-20220331220935-ae2d96664a29 h1:tkVvjkPTB7pnW3jnid7kNyAMPVWllTNOf/qKDze4p9o=
